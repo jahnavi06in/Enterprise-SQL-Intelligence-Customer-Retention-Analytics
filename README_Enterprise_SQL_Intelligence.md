@@ -1,7 +1,7 @@
 # Customer Retention & Revenue Intelligence: An SQL-Driven E-Commerce Investigation
 
 ## Project overview
-An end-to-end SQL analytics case study using the **real UCI Online Retail dataset**. It investigates revenue trends, product and country performance, repeat purchasing, cohort retention, customer revenue concentration, and data quality.
+An end-to-end SQL analytics case study using the **real UCI Online Retail dataset**. it investigates revenue trends, product and country performance, repeat purchasing, cohort retention, customer revenue concentration, and data quality.
 
 ## Business questions
 - What is the scale of cleaned positive sales, invoices, customers, and products?
