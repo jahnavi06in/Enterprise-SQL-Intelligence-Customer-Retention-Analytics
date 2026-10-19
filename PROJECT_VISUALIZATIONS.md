@@ -1,51 +1,114 @@
-# Visual Findings
+# 📊 Project Visualizations & Business Insights
 
-This page brings the project's charts together and explains the question behind each one. The charts use the historical UCI Online Retail transaction data (December 2010–December 2011), with sales-analysis filters documented in `DATA_SOURCE_AND_METHODOLOGY.md`.
+## Enterprise SQL Intelligence & Customer Retention Analytics
 
-## 1. Monthly revenue trend
+**Dataset:** UCI Online Retail  
+**Period:** December 2010 – December 2011  
+**Analysis:** Sales Performance | Customer Retention | Revenue Intelligence
 
-![Monthly revenue trend](monthly_revenue.png)
+This page presents the visual outputs of my SQL-based retail analytics project. Each visualization addresses a business question and supports further investigation of sales and customer behaviour.
 
-**Question:** How did recorded sales vary over time?
+---
 
-**How to read it:** Look for month-to-month changes and unusually high or low periods. A spike is a prompt for investigation, not an explanation by itself. Calendar effects, large orders, returns treatment, and changes in customer activity may all matter.
+## 1. Monthly Revenue Analysis
 
-## 2. Product revenue
+![Monthly Revenue Trend](monthly_revenue.png)
 
-![Top products by revenue](top_products_revenue.png)
+**Business question:** How did recorded sales revenue change over time?
 
-**Question:** Which products generated the most recorded revenue?
+**What this visualization helps investigate:**
+- Monthly revenue fluctuations.
+- Periods with relatively high or low sales.
+- Changes that may warrant further analysis.
 
-**How to read it:** High revenue can help identify products worth examining, but it does not establish profitability. Product cost, discounts, returns, and stock availability would be needed for a fuller commercial view.
+**Business relevance:** Monthly revenue trends help analysts identify periods that deserve closer examination. Additional data is required to explain the causes of increases or decreases.
 
-## 3. Revenue by country
+---
 
-![Top countries by revenue](country_revenue.png)
+## 2. Product Revenue Performance
 
-**Question:** Which countries account for the largest share of recorded sales?
+![Top Products by Revenue](top_products_revenue-1.png)
 
-**How to read it:** The data is heavily weighted toward the United Kingdom. Comparisons across countries should account for the very different sales volumes and should not be treated as a current market-sizing exercise.
+**Business question:** Which products contributed the most recorded revenue?
 
-## 4. Customer cohort retention
+**What this visualization helps investigate:**
+- Products with the highest revenue contribution.
+- Differences in revenue across products.
+- Products that may warrant further commercial analysis.
 
-![Customer cohort retention](customer_retention_cohort.png)
+**Business relevance:** Product revenue rankings can support product-performance reviews. Profitability decisions require additional information such as product costs, discounts, and returns.
 
-**Question:** What proportion of each first-purchase cohort made another purchase in later months?
+---
 
-**How to read it:** Each cohort starts at 100% in its first purchase month. Later cells show the share observed purchasing again in the corresponding month since first purchase. Later cohorts have fewer months of follow-up, so blank cells mean the period is not observed in this dataset—not zero retention.
+## 3. Revenue by Country
 
-## 5. RFM customer segments
+![Revenue by Country](country_revenue-1.png)
 
-![RFM customer segments](rfm_customer_segments.png)
+**Business question:** Which countries contributed the most recorded sales revenue?
 
-**Question:** How can customers be grouped by observed purchase behaviour?
+**What this visualization helps investigate:**
+- Geographic revenue distribution.
+- The contribution of the United Kingdom.
+- Differences in sales volume across countries.
 
-**How to read it:** Recency, frequency, and monetary value provide a descriptive view of customer activity. Segment thresholds are project-defined and should be reviewed with business stakeholders before they are used to target customers.
+**Business relevance:** Geographic analysis can help identify markets for further investigation. These historical results should not be treated as a representation of current market demand.
 
-## Important caveats
+---
 
-- This is historical data from 2010–2011, not a view of current retail performance.
-- Revenue is calculated from quantity multiplied by unit price; it is not profit.
-- Customer analysis only includes transactions with an identified customer ID.
-- The charts depend on the cleaning rules and definitions described in the methodology file.
-- These patterns are descriptive. They do not establish why customers behaved a certain way or predict future purchases.
+## 4. Customer Cohort Retention
+
+![Customer Cohort Retention](customer_retention_cohort.png)
+
+**Business question:** How many customers from each first-purchase cohort continued purchasing in subsequent months?
+
+**What this visualization helps investigate:**
+- Repeat purchasing after the first recorded purchase.
+- Changes in observed retention across cohorts.
+- Differences in retention at comparable cohort ages.
+
+**Business relevance:** Cohort analysis provides a structured way to understand historical customer activity and identify questions for further retention analysis.
+
+**Interpretation note:** Later cohorts have shorter observation periods. Blank cells indicate months that are not observable in the dataset, not zero retention.
+
+---
+
+## 5. RFM Customer Segmentation
+
+![RFM Customer Segments](rfm_customer_segments.png)
+
+**Business question:** How can customers be grouped according to their observed purchasing behaviour?
+
+RFM represents three dimensions:
+
+- **Recency:** How recently a customer purchased.
+- **Frequency:** How many distinct invoices are associated with the customer.
+- **Monetary:** Total recorded customer revenue.
+
+**What this visualization helps investigate:**
+- Differences in observed customer activity.
+- Customers with relatively recent and frequent purchases.
+- Customer groups that may warrant further analysis.
+
+**Business relevance:** RFM segmentation helps organise historical customer behaviour into interpretable groups. The segments are descriptive, not predictions of future purchasing behaviour.
+
+---
+
+## Key Analytical Considerations
+
+- Revenue is calculated as quantity multiplied by unit price and represents recorded sales, not profit.
+- Customer-level analyses exclude transactions without an identified customer ID.
+- Returns and cancellations must be handled consistently with the documented data-preparation rules.
+- The observation period covers December 2010 through December 2011.
+- Visual patterns describe historical behaviour and do not establish causation.
+
+---
+
+## Tools and Techniques
+
+**SQL | Data Cleaning | Aggregation | Window Functions | Revenue Analysis | Cohort Retention | RFM Segmentation | Business Interpretation**
+
+---
+
+## Project Objective
+
+The objective is to demonstrate how structured SQL analysis can transform retail transaction records into measurable sales and customer insights, while documenting assumptions and limitations clearly.
