@@ -1,67 +1,149 @@
 # Data Source and Methodology
 
 ## Project
-**Enterprise SQL Intelligence & Customer Retention Analytics**
+Enterprise SQL Intelligence & Customer Retention Analytics
 
-## Why I chose this dataset
-I used the UCI Online Retail dataset because it contains transaction-level records that make it possible to explore practical e-commerce questions: how revenue changes over time, which products contribute most to sales, how customers return, and how purchasing behaviour differs across customer groups.
+## 1. Data Source
 
-**Source:** UCI Machine Learning Repository — Online Retail dataset  
-https://archive.ics.uci.edu/dataset/352/online+retail
+This project uses the UCI Online Retail dataset.
 
-The dataset describes transactions from a UK-based online retailer between **1 December 2010 and 9 December 2011**. It is historical data, so the results should be treated as a case study rather than a description of today's retail market.
+Source: [UCI Machine Learning Repository — Online Retail](https://archive.ics.uci.edu/dataset/352/online+retail)
 
-## Questions I wanted to answer
-1. How does recorded sales revenue change over time?
-2. Which products and countries contribute the most recorded revenue?
-3. How much of the customer base made purchases on more than one occasion?
-4. What patterns appear when customers are grouped by recency, frequency, and monetary value (RFM)?
-5. What should a business investigate next before taking action?
+The dataset contains transaction-level records from a UK-based online retailer between 1 December 2010 and 9 December 2011.
 
-## Preparation and quality checks
-Before interpreting the results, I considered the following checks:
+The analysis is a historical case study. Its findings should not be interpreted as a description of current retail market conditions.
 
-- Inspect missing customer identifiers and avoid pretending those records can be assigned to known customers.
-- Check quantities and unit prices for zero or negative values, since cancellations, returns, and unusual records can affect revenue calculations.
-- Use invoice and customer identifiers consistently when counting transactions and customers.
-- Keep the distinction between transaction-level records and customer-level summaries clear.
-- Verify that revenue calculations use quantity multiplied by unit price, and label the measure as **recorded sales revenue**, not profit.
+## 2. Business Questions
 
-The treatment of cancelled invoices, returns, missing identifiers, and unusual values should be stated explicitly in the SQL and reflected consistently in all output tables. Where these decisions change the population being analysed, the resulting counts may differ from the raw dataset totals.
+This project investigates:
 
-## Analytical approach
+- How recorded sales revenue changes over time.
+- Which products and countries contribute most to recorded revenue.
+- How frequently identified customers make repeat purchases.
+- How customer behaviour varies across recency, frequency, and monetary value.
+- How revenue is distributed across customers.
+- Which patterns deserve further business investigation.
 
-### Revenue trends
-Aggregate transaction line revenue over time to identify broad patterns. Monthly totals are easier to communicate to business stakeholders than a long list of individual invoices.
+## 3. Data Preparation and Quality Checks
 
-### Product and geography analysis
-Rank products and countries by recorded revenue. These rankings describe contribution in this dataset; they do not by themselves explain why a product performs well or whether it is profitable.
+The analysis distinguishes the original transaction data from the cleaned sales dataset.
 
-### Customer retention
-Use customer identifiers and invoice dates to distinguish one-time purchasers from customers with multiple recorded purchases. Define the repeat-customer calculation clearly, including which records are included in the customer population.
+The `raw_transactions` table represents the source records, while `clean_sales` represents the records used for positive-sales analysis.
 
-### RFM segmentation
+The preparation process should explicitly document the following rules:
+
+- **Missing customer identifiers:** Retain source records for appropriate transaction-level analysis where applicable, but exclude records without a customer ID from customer-level retention and RFM calculations.
+- **Cancelled invoices:** Identify cancellation invoices using the source invoice identifier and assess their treatment separately from completed sales.
+- **Negative quantities:** Identify negative-quantity records because they may represent returns or adjustments.
+- **Invalid unit prices:** Inspect zero or negative prices and document whether these records are excluded.
+- **Duplicate records:** Identify exact duplicate rows and document whether they are removed during preparation.
+- **Revenue calculation:** Calculate line revenue as quantity multiplied by unit price.
+- **Transaction counting:** Count distinct invoice identifiers when calculating invoice-level metrics.
+- **Customer counting:** Count distinct non-null customer identifiers for identified-customer metrics.
+
+The exact implementation must match the SQL preparation script. These checks describe the required methodology and should not be interpreted as proof that a rule was applied unless the code confirms it.
+
+## 4. Revenue Analysis
+
+Line revenue is calculated as:
+
+`Revenue = Quantity × Unit Price`
+
+Revenue is expressed in GBP.
+
+The project analyses:
+
+- Total recorded sales revenue.
+- Monthly revenue and month-over-month movement.
+- Average invoice value.
+- Product revenue contribution.
+- Revenue by country.
+- Revenue concentration among the highest-spending customers.
+
+Recorded revenue is not profit. The dataset does not provide all costs required to calculate profit margins.
+
+## 5. Customer Analysis
+
+### Repeat Purchase Rate
+
+Customers are classified based on the number of distinct invoices associated with their customer ID.
+
+- **Repeat customers:** Customers with at least two distinct invoices.
+- **One-time customers:** Customers with exactly one distinct invoice.
+
+The repeat purchase rate is:
+
+`Repeat Purchase Rate = Repeat Customers / Identified Customers × 100`
+
+This metric describes repeat purchasing within the observed dataset and analysis window.
+
+### Cohort Retention
+
+Customers are grouped by the month of their first recorded purchase.
+
+Retention measures how many customers from each cohort have recorded purchasing activity in subsequent months.
+
+Month 0 represents the cohort's first purchase month.
+
+Customers who do not reappear during the observed period are not necessarily permanently lost.
+
+### Customer Revenue
+
+Customer revenue represents recorded spending attributed to an identified customer during the observation period.
+
+It is a historical revenue measure, not a predictive customer lifetime value model.
+
+## 6. RFM Segmentation
+
 RFM stands for:
-- **Recency:** how recently a customer purchased relative to the analysis reference date.
-- **Frequency:** how often the customer purchased during the observed period.
-- **Monetary value:** the total recorded spend attributed to that customer during the observed period.
 
-RFM groups are descriptive, not permanent labels. Results depend on the reference date, the cleaning rules, and the scoring thresholds used.
+- **Recency:** Days since the customer's most recent purchase relative to the dataset's latest transaction date.
+- **Frequency:** Number of distinct purchase invoices.
+- **Monetary:** Total recorded revenue attributed to the customer.
 
-## Important limitations
-- The dataset covers a limited historical period and one retailer; it is not representative of every e-commerce business.
-- Missing customer IDs limit customer-level analysis for some transactions.
-- Recorded revenue does not include all costs, so it cannot be used as a substitute for profit or margin.
-- Returns, cancellations, discounts, shipping, and other business rules can affect interpretation.
-- A customer who does not appear again within the observed period is not necessarily permanently lost; the dataset window may simply end before their next purchase.
-- Descriptive patterns show associations, not the causes of customer behaviour.
+The SQL analysis uses quintile-based scores to group customers relative to the observed population.
 
-## What I would investigate next
-1. Compare retention across acquisition periods using a clearly defined cohort method.
-2. Separate returned or cancelled transactions from completed sales and reconcile the impact on revenue.
-3. Add gross margin and marketing-cost data before recommending which products or customers to prioritise.
-4. Test whether retention patterns differ by customer location or product category, while checking sample sizes.
-5. Validate any proposed retention campaign through an experiment rather than assuming that correlation implies impact.
+These segments are descriptive and depend on the observation period, data preparation rules, and scoring method. They do not establish future purchasing behaviour.
 
-## Reproducibility note
-The SQL scripts, data preparation rules, and output summaries should agree with one another. If the cleaning logic or analysis period changes, rerun the relevant queries and update reported numbers rather than manually editing results. Document any assumptions that are specific to this implementation.
+## 7. Business Interpretation
+
+Revenue and customer metrics can help identify patterns that deserve further investigation.
+
+Examples include:
+
+- Investigating monthly revenue increases and decreases.
+- Reviewing products with high recorded revenue.
+- Examining countries with substantial sales contribution.
+- Understanding the proportion of identified customers who purchase repeatedly.
+- Investigating customer groups with different RFM profiles.
+- Evaluating dependence on a small group of high-revenue customers.
+
+These patterns do not establish their causes. Business recommendations should be validated with additional data and appropriate testing.
+
+## 8. Limitations
+
+- The dataset covers one retailer and a limited historical period.
+- Missing customer identifiers limit customer-level analysis.
+- Recorded revenue does not represent profit or margin.
+- Returns, cancellations, discounts, and other business rules can affect interpretation.
+- The observation window may end before a customer makes another purchase.
+- Descriptive analysis identifies patterns but does not establish causation.
+- Results depend on the implemented cleaning rules and analytical definitions.
+
+## 9. Further Investigation
+
+Potential next steps include:
+
+- Comparing retention across acquisition cohorts.
+- Reconciling cancellations and returns against completed sales.
+- Adding product margin and marketing-cost data.
+- Comparing retention patterns across countries and product categories.
+- Testing retention initiatives through controlled experiments where feasible.
+
+## 10. Reproducibility
+
+The SQL scripts, preparation logic, analysis outputs, and reported results should remain consistent.
+
+Whenever cleaning rules or the analysis period change, the affected queries and reported figures should be rerun.
+
+All assumptions specific to the implementation should be documented so another analyst can reproduce and evaluate the results.
