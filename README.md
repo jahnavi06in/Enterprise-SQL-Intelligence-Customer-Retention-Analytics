@@ -31,7 +31,7 @@ This is a historical case study, not a representation of current retail market c
 
 ## Key Results
 
-The following metrics are documented in the project's results summary and data-preparation output.
+These metrics were reproduced by running `Prepare_data.py` and `analysis.sql` on the full dataset.
 
 | Metric | Result |
 |---|---:|
@@ -48,7 +48,7 @@ The following metrics are documented in the project's results summary and data-p
 
 **Revenue calculation:** Quantity × Unit Price.
 
-Revenue represents recorded sales, not profit. Customer metrics exclude transactions without an identified customer.
+Revenue represents gross recorded sales, not profit. Cancellation invoices are excluded but not netted against the original orders (the raw data contains £896,812 of cancellation value). Customer metrics exclude transactions without an identified customer.
 
 ## Business Insights
 
@@ -111,8 +111,6 @@ The project includes SQL queries for:
 
 The SQL analysis uses SQLite-compatible queries and assumes the prepared `clean_sales` and `raw_transactions` tables are available.
 
-Individual queries should be executed against the generated database to validate their outputs.
-
 ## RFM Customer Segmentation
 
 RFM analysis examines customers using three dimensions:
@@ -124,6 +122,12 @@ RFM analysis examines customers using three dimensions:
 Relative scores can help compare customer purchasing patterns and identify groups for further investigation.
 
 RFM segments are descriptive categories based on historical activity. They are not predictive labels or guarantees of future behaviour.
+
+## How to Reproduce
+
+1. Download `Online Retail.xlsx` from the UCI link above and upload it to `/content` in Google Colab.
+2. Run `Prepare_data.py` to create `customer_retention_analytics.db`.
+3. Run the queries in `analysis.sql` against that database.
 
 ## Data Preparation
 
@@ -158,15 +162,13 @@ The repository contains SQL scripts, Python data-preparation code, analysis docu
 Key files include:
 
 - `analysis.sql` — SQL analysis queries.
-- `prepare_data.py` — Data preparation and database creation.
+- `Prepare_data.py` — Data preparation and database creation.
 - `RESULTS_SUMMARY.md` — Documented project metrics.
 - `BUSINESS_READOUT.md` — Business interpretation.
 - `SQL_QUERY_GUIDE.md` — SQL query documentation.
 - `PROJECT_VISUALIZATIONS.md` — Visualization documentation.
 - `DATA_SOURCE_AND_METHODOLOGY-3.md` — Dataset and methodology documentation.
 - `ANALYSIS_NOTES.md` — Additional analytical notes.
-
-File names listed above should be checked against the actual repository before publication.
 
 ## Limitations
 
@@ -177,7 +179,9 @@ File names listed above should be checked against the actual repository before p
 - Recent customer cohorts have fewer observable months.
 - Customers who do not return during the observation period are not necessarily permanently lost.
 - Descriptive analysis does not establish causation.
-- SQL outputs must be validated against the generated database.
+- Revenue is gross of cancellations; some large orders in the data were cancelled minutes after being placed, which inflates certain product and customer totals.
+- December 2011 contains data only up to 9 December, so its monthly revenue and the most recent cohort-month cells are partial.
+- Some stock codes are not merchandise (for example DOT, POST and M for postage and manual adjustments).
 
 ## Future Improvements
 
