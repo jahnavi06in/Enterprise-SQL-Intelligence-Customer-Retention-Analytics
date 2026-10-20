@@ -97,7 +97,10 @@ RFM represents three dimensions:
 
 - Revenue is calculated as quantity multiplied by unit price and represents recorded sales, not profit.
 - Customer-level analyses exclude transactions without an identified customer ID.
-- Returns and cancellations must be handled consistently with the documented data-preparation rules.
+- Returns and cancellations must be handled consistently with the documented data-preparation rules. Revenue shown is gross positive sales; cancellations are not netted against original orders.
+- December 2011 contains data only up to 9 December, so the final point on the monthly chart and the final diagonal of the cohort chart are partial months.
+- In the cohort chart, "Month 1" is the first-purchase month (Month 0 in `analysis.sql`).
+- The top-products chart shows the top 12 products by revenue and includes non-merchandise codes (DOTCOM POSTAGE, POSTAGE, Manual). PAPER CRAFT, LITTLE BIRDIE and MEDIUM CERAMIC TOP STORAGE JAR are inflated by large orders that were later cancelled.
 - The observation period covers December 2010 through December 2011.
 - Visual patterns describe historical behaviour and do not establish causation.
 
