@@ -1,5 +1,5 @@
 """
-EntEnterpriseerprise SQL Intelligence & Customer Retention Analytics
+Enterprise SQL Intelligence & Customer Retention Analytics
 Data Preparation Pipeline
 
 Input:
@@ -465,3 +465,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
