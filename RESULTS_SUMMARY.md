@@ -1,4 +1,4 @@
-here# Results Summary — Enterprise SQL Intelligence & Customer Retention Analytics
+her# Results Summary — Enterprise SQL Intelligence & Customer Retention Analytics
 
 ## 1. Dataset and Scope
 
@@ -60,7 +60,7 @@ The preparation pipeline's cleaning rules and the actual database outputs should
 
 ## 3. Key Business Metrics
 
-The following metrics are documented in the project's preparation output and analysis results.
+All metrics below were reproduced by running `Prepare_data.py` and `analysis.sql` on the full dataset.
 
 | Metric | Reported Result |
 |---|---:|
@@ -87,7 +87,7 @@ The following metrics are documented in the project's preparation output and ana
 
 Customer-level calculations exclude records without an identified customer ID.
 
-The average invoice value and customer concentration figures should be checked against their corresponding SQL outputs before being treated as independently verified.
+Revenue is gross positive sales: cancellation invoices are excluded but not netted against the original orders. The raw data contains £896,812 of cancellation value, including two large orders (invoices 541431 and 581483, about £77,184 and £168,470) that were cancelled 12 to 16 minutes later. These inflate the totals for the corresponding products and customers.
 
 ---
 
@@ -172,7 +172,7 @@ This measure describes how recorded customer revenue is distributed among identi
 
 Monitoring customer concentration can help investigate revenue dependence on high-spending customers. However, concentration alone does not establish that the business faces a specific financial or operational risk.
 
-The reported percentage should be reproduced from the corresponding SQL query before being treated as independently verified.
+Two of the top ten customers (IDs 12346 and 16446) have revenue that consists largely of the cancelled orders mentioned above, so this share is overstated on a net-sales basis.
 
 ---
 
@@ -206,7 +206,16 @@ Potential business applications include:
 
 RFM scores are descriptive measures based on historical data. They do not predict future customer behaviour.
 
-Business labels such as *Champions*, *Loyal*, *At Risk*, or *Needs Nurture* should only be applied when explicit scoring thresholds and classification rules have been defined and implemented.
+Segment labels are assigned by the explicit rules in `analysis.sql` (query 15), using quintile scores (NTILE(5)) for recency, frequency and monetary value.
+
+| Segment | Customers |
+|---|---:|
+| Champions | 942 |
+| Loyal / Active | 998 |
+| New / Promising | 662 |
+| Needs Nurture | 1,074 |
+| At Risk - Previously Frequent | 662 |
+
 
 ---
 
@@ -229,11 +238,11 @@ The reported raw table contains 541,909 rows, while the cleaned positive-sales t
 
 1. Cancellation records should be examined separately from positive-sales transactions.
 2. Missing customer identifiers limit customer-level analysis but do not necessarily make a transaction unusable for all sales analysis.
-3. Exact duplicate detection should compare the original field values rather than rely solely on concatenated strings.
+3. Exact duplicate detection compares all original field values.
 4. Invoice-level metrics should use distinct invoice identifiers where appropriate.
 5. Cleaning rules should be documented consistently across the Python pipeline, SQL queries, and project documentation.
 
-The documented duplicate count is 5,268. The concatenation-based SQL audit provides a preliminary check, while the Python cleaning implementation should be used to validate exact duplicate removal.
+The documented duplicate count is 5,268. The SQL audit (`SELECT DISTINCT *` on `raw_transactions`) reproduces the 5,268 figure.
 
 ---
 
@@ -273,6 +282,8 @@ Used to maintain project code, SQL scripts, documentation, and visualization ass
 
 The analysis has several limitations:
 
+- December 2011 contains data only up to 9 December, so its monthly revenue and the latest cohort-month cells are partial.
+- Some stock codes are not merchandise (for example DOT, POST and M).
 - The dataset covers a single retailer over a historical period ending in December 2011.
 - The findings do not represent current retail market conditions.
 - Missing customer identifiers restrict customer-level analysis.
